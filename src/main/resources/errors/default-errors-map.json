@@ -1,0 +1,38 @@
+{
+  "400": {
+    "message": "Bad Request",
+    "description": "{exceptionDescription}"
+  },
+  "404": {
+    "message": "Not Found",
+    "description": "{exceptionDescription}"
+  },
+  "405": {
+    "message": "Not Allowed",
+    "description": "{exceptionDescription}"
+  },
+  "406": {
+    "message": "Not Acceptable",
+    "description": "{exceptionDescription}"
+  },
+  "415": {
+    "message": "Unsupported Media Type",
+    "description": "{exceptionDescription}"
+  },
+  "500": {
+    "message": "Internal Server Error",
+    "description": "Technical Error"
+  },
+  "501": {
+    "message": "Not Implemented",
+    "description": "{exceptionDescription}"
+  },
+  "pagination-offset": {
+    "message": "Bad Request",
+    "description": "Query offset value should be positive integer"
+  },
+  "pagination-limit": {
+    "message": "Bad Request",
+    "description": "Limit offset value should be positive integer and should be less than {exceptionDescription}"
+  }
+}

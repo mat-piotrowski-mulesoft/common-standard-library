@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<sub-flow name="errors-declaration-subflow" doc:id="2cc5a770-faae-4908-b6bf-3d2d7e0bd8ce" >
+		<raise-error doc:name="APP:EXCEPTION_HANDLING" doc:id="8bf666d1-0a1a-42ff-9a1f-4576eeae085c" type="APP:EXCEPTION_HANDLING"/>
+		<raise-error doc:name="APP:PAGINATION_OFFSET" doc:id="af2a8835-abfd-4b9c-8e68-20b661750807" type="APP:PAGINATION_OFFSET" />
+		<raise-error doc:name="APP:PAGINATION_LIMIT" doc:id="49fc66eb-ecf1-4d1b-8320-1c719ff70550" type="APP:PAGINATION_LIMIT" />
+	</sub-flow>
+	<error-handler name="api-exception-strategy" doc:id="7e4ea39a-376d-4116-8683-87141f17abb6" >
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate 400" doc:id="8fcc7869-a0d0-46dc-ad86-933e6b181786" type="APIKIT:BAD_REQUEST" >
+			<ee:transform doc:name="Bad Request Error" doc:id="2e50115b-a793-4e97-be8c-2fc7aa7fbdb8" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+
+import standardError from errors::defaultErrorsScript
+var exceptionDescription = error.description
+---
+standardError("400", exceptionDescription)]]></ee:set-payload>
+				</ee:message>
+				<ee:variables >
+					<ee:set-variable variableName="httpStatus" ><![CDATA[400]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate 404" doc:id="07062099-fe0e-4651-bd8f-e4c0c1112a38" type="APIKIT:NOT_FOUND" >
+			<ee:transform doc:name="Not Found Error" doc:id="edcf2503-c5c6-4ae6-b340-151788beb177" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+
+import standardError from errors::defaultErrorsScript
+var exceptionDescription = error.description
+---
+standardError("404", exceptionDescription)]]></ee:set-payload>
+				</ee:message>
+				<ee:variables >
+					<ee:set-variable variableName="httpStatus" ><![CDATA[404]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate 405" doc:id="631df47f-a963-42ba-a5a4-d44e6ebfa95f" type="APIKIT:METHOD_NOT_ALLOWED" >
+			<ee:transform doc:name="Not Allowed Error" doc:id="e1945910-4140-4b3a-b816-a32374f5efee" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+
+import standardError from errors::defaultErrorsScript
+var exceptionDescription = error.description
+---
+standardError("405", exceptionDescription)]]></ee:set-payload>
+				</ee:message>
+				<ee:variables >
+					<ee:set-variable variableName="httpStatus" ><![CDATA[405]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate 406" doc:id="cf31988c-4579-4d66-b5a8-2fce87f65c8f" type="APIKIT:NOT_ACCEPTABLE" >
+			<ee:transform doc:name="Not Acceptable Error" doc:id="d4c36ca8-dcb1-4a51-83cb-2650ac04dede" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+
+import standardError from errors::defaultErrorsScript
+var exceptionDescription = error.description
+---
+standardError("406", exceptionDescription)]]></ee:set-payload>
+				</ee:message>
+				<ee:variables >
+					<ee:set-variable variableName="httpStatus" ><![CDATA[406]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+		</on-error-propagate>
+				<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate 415" doc:id="9be4b6af-d9aa-45a1-87c3-920da62f2054" type="APIKIT:UNSUPPORTED_MEDIA_TYPE">
+			<ee:transform doc:name="Not Implemented Error" doc:id="fc68f15a-ae90-4022-8fac-4a7d3a794abf">
+				<ee:message>
+					<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+
+import standardError from errors::defaultErrorsScript
+var exceptionDescription = error.description
+---
+standardError("415", exceptionDescription)]]></ee:set-payload>
+				</ee:message>
+				<ee:variables>
+					<ee:set-variable variableName="httpStatus"><![CDATA[415]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate 501" doc:id="2c133585-41a7-48bc-9e96-e04838fc5faa" type="APIKIT:NOT_IMPLEMENTED" >
+			<ee:transform doc:name="Not Implemented Error" doc:id="b7bca9ec-f007-4731-8a12-e79512689afb" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+
+import standardError from errors::defaultErrorsScript
+var exceptionDescription = error.description
+---
+standardError("501", exceptionDescription)]]></ee:set-payload>
+				</ee:message>
+				<ee:variables >
+					<ee:set-variable variableName="httpStatus" ><![CDATA[501]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate Custom" doc:id="b028c707-57e4-4e1c-a38e-cdec9f2b43e8" type="APP:EXCEPTION_HANDLING">
+			<ee:transform doc:name="Custom Exception Error" doc:id="769ac4e5-fad1-400a-8e24-a111e6d6fcfd" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+
+import customError from errors::customErrorsScript
+var errorCode = error.description
+---
+customError(errorCode)]]></ee:set-payload>
+				</ee:message>
+				<ee:variables >
+					<ee:set-variable variableName="httpStatus" ><![CDATA[output application/java
+
+import customErrorCode from errors::customErrorsScript
+var errorCode = error.description
+---
+customErrorCode(errorCode)
+
+]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate Pagination Offset" doc:id="9c8d0851-b1ca-4538-9662-164b083d511c" type="APP:PAGINATION_OFFSET">
+			<ee:transform doc:name="Pagination Offset Exception Error" doc:id="2e2a7c0a-8179-4006-83c1-1fe0779fac52">
+				<ee:message>
+					<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+
+import paginationError from errors::defaultErrorsScript
+---
+paginationError("pagination-offset")]]></ee:set-payload>
+				</ee:message>
+				<ee:variables>
+					<ee:set-variable variableName="httpStatus"><![CDATA[400]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate Pagination Limit" doc:id="8ab2befe-7454-46ff-ab77-ea0e916e9d31" type="APP:PAGINATION_LIMIT" >
+			<ee:transform doc:name="Pagination Limit Exception Error" doc:id="a28a8f80-3cec-49d0-948b-80c5084c5b00" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+
+import paginationError from errors::defaultErrorsScript
+var exceptionDescription = Mule::p("pagination.limit.max")
+---
+paginationError("pagination-limit", exceptionDescription)]]></ee:set-payload>
+				</ee:message>
+				<ee:variables >
+					<ee:set-variable variableName="httpStatus" ><![CDATA[400]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate Default 500" doc:id="d6a392eb-f7a5-4e13-9d2b-54fae3222bb6" >
+			<ee:transform doc:name="Default 500 Error" doc:id="ece30a4d-eb11-440c-9114-97eb8de4527f" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+
+import standardError from errors::defaultErrorsScript
+---
+standardError("500")]]></ee:set-payload>
+				</ee:message>
+				<ee:variables >
+					<ee:set-variable variableName="httpStatus" ><![CDATA[500]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+		</on-error-propagate>
+	</error-handler>
+</mule>
