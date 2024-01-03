@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:validation="http://www.mulesoft.org/schema/mule/validation" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mule/validation/current/mule-validation.xsd">
+	<sub-flow name="csl:pagination-init-subflow" doc:id="7b2a07f8-d6ba-4b9f-b641-9977e7cf7375" >
+		<ee:transform doc:name="Save request data" doc:id="667a0403-9c3c-4ec0-b4f2-862c8c6fe2fd" >
+			<ee:message >
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable variableName="offset" ><![CDATA[%dw 2.0
+output application/java
+---
+attributes.queryParams.offset default "1"]]></ee:set-variable>
+				<ee:set-variable variableName="limit" ><![CDATA[%dw 2.0
+output application/java
+var defaultLimitValue = Mule::p("pagination.limit.default")
+---
+attributes.queryParams.limit default defaultLimitValue]]></ee:set-variable>
+				<ee:set-variable variableName="requestUrl" ><![CDATA[%dw 2.0
+output application/java
+
+var url = attributes.requestUri
+---
+if (url contains ("offset"))
+    url
+else if (url contains "?")
+    url ++ "&offset=1"
+else
+    url ++ "?offset=1"]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<validation:is-number numberType="INTEGER" doc:name="Offset valdiation" doc:id="fc0635b5-ad2d-4553-9e2b-e301cc19c33f" value="#[vars.offset]" minValue="1">
+			<error-mapping sourceType="VALIDATION:INVALID_NUMBER" targetType="APP:PAGINATION_OFFSET" />
+		</validation:is-number>
+		<validation:is-number numberType="INTEGER" doc:name="Limit valdiation" doc:id="bc3b3373-ae60-47a1-a670-2b50139d4502" value="#[vars.limit]" minValue="1" maxValue='#[Mule::p("pagination.limit.max") as Number]'>
+			<error-mapping sourceType="VALIDATION:INVALID_NUMBER" targetType="APP:PAGINATION_LIMIT" />
+		</validation:is-number>
+	</sub-flow>
+	<sub-flow name="csl:create-pagination-links-subflow" doc:id="ee184359-5bff-455f-bb62-5cdff8503494" >
+		<ee:transform doc:name="Save pagination links" doc:id="ff0c86a6-3906-4ca7-9244-b70c8a2fbd15" >
+			<ee:message >
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable variableName="paginationLinks" ><![CDATA[%dw 2.0
+output application/java
+
+var isNextPage = vars.isNextPage default false
+var lastPageValue = vars.lastPageValue
+var url = vars.requestUrl
+var offset = vars.offset
+---
+{
+	first: url replace ("offset=" ++ offset) with "offset=1",
+	prev: if (offset == "1")
+			url
+		  else
+		  	url replace ("offset=" ++ offset) with ("offset=" ++ ((offset - 1) as String)),
+	next: if (isNextPage)
+			url replace ("offset=" ++ offset) with ("offset=" ++ ((offset + 1) as String))
+		  else
+		  	"",
+	(last: url replace ("offset=" ++ offset) with ("offset=" ++ lastPageValue)) if (not isEmpty(lastPageValue))
+}]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+	</sub-flow>
+</mule>
