@@ -12,6 +12,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+            token: 
       - name: Remove SNAPSHOT from pom.xml
         run: mvn versions:set -DremoveSnapshot=true -DgenerateBackupPoms=false
       - name: Commit changes
@@ -20,3 +22,5 @@ jobs:
           git config --global user.name "github-actions"
           git commit -am "Remove SNAPSHOT from pom.xml"
           git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.MAVEN_REPO_GITHUB_TOKEN }}
