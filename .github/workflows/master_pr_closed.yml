@@ -20,3 +20,5 @@ jobs:
           git config --global user.name "github-actions"
           git commit -am "Remove SNAPSHOT from pom.xml"
           git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.MAVEN_REPO_GITHUB_TOKEN }}
