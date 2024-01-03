@@ -12,8 +12,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        with:
-            token: 
       - name: Remove SNAPSHOT from pom.xml
         run: mvn versions:set -DremoveSnapshot=true -DgenerateBackupPoms=false
       - name: Commit changes
