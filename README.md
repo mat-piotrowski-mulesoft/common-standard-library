@@ -1,6 +1,9 @@
 # common-standard-library
 Mulesoft common library to handle reusable flows and configurations.
 
+## Version
+1.0.0
+
 ## Installation
 To install this package you need to have:
 
