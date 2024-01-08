@@ -6,6 +6,7 @@
 http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
 	<sub-flow name="errors-declaration-subflow" doc:id="2cc5a770-faae-4908-b6bf-3d2d7e0bd8ce" >
 		<raise-error doc:name="APP:EXCEPTION_HANDLING" doc:id="8bf666d1-0a1a-42ff-9a1f-4576eeae085c" type="APP:EXCEPTION_HANDLING"/>
+		<raise-error doc:name="APP:CLIENT_EXCEPTION" doc:id="4a626672-64b9-4754-9154-f89b992c2ee8" type="APP:CLIENT_EXCEPTION" />
 		<raise-error doc:name="APP:PAGINATION_OFFSET" doc:id="af2a8835-abfd-4b9c-8e68-20b661750807" type="APP:PAGINATION_OFFSET" />
 		<raise-error doc:name="APP:PAGINATION_LIMIT" doc:id="49fc66eb-ecf1-4d1b-8320-1c719ff70550" type="APP:PAGINATION_LIMIT" />
 	</sub-flow>
@@ -126,6 +127,26 @@ var errorCode = error.description
 customErrorCode(errorCode)
 
 ]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="b190ae24-c136-41ce-801b-7202f027613c" type="APP:CLIENT_EXCEPTION">
+			<ee:transform doc:name="Client Exception Error" doc:id="7cebc652-2cc6-4f83-b280-6aef6930eae3" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+
+import clientError from errors::clientErrorsScript
+---
+clientError(error.description)]]></ee:set-payload>
+				</ee:message>
+				<ee:variables >
+					<ee:set-variable variableName="httpStatus" ><![CDATA[%dw 2.0
+output application/java
+
+import clientErrorCode from errors::clientErrorsScript
+---
+clientErrorCode(error.description)]]></ee:set-variable>
 				</ee:variables>
 			</ee:transform>
 		</on-error-propagate>
