@@ -1,0 +1,22 @@
+{
+	"DB400": {
+	    "message": "Bad Request",
+	    "description": "{description}",
+	    "statusCode": 400
+	 },
+	"DB401": {
+	    "message": "Unathorized",
+	    "description": "{description}",
+	    "statusCode": 401
+	 },
+	"DB500": {
+	    "message": "Internal Server Error",
+	    "description": "{description}",
+	    "statusCode": 500
+	 },
+	"DB503": {
+	    "message": "Service Unavailable",
+	    "description": "{description}",
+	    "statusCode": 503
+	 }
+}

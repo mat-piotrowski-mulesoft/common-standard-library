@@ -22,5 +22,30 @@ write(message, 'application/json')]]></ee:set-variable>
 				</ee:variables>
 			</ee:transform>
 		</on-error-continue>
+		<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="a25b7d2c-e24b-498f-a380-83d1ab9291d8" type="DB:*">
+			<ee:transform doc:name="Set exception message and details" doc:id="ca2f4604-da1e-45ab-8f0f-549ead441040" >
+				<ee:message />
+				<ee:variables >
+					<ee:set-variable variableName="exceptionMessage" ><![CDATA[%dw 2.0
+output application/java
+
+import genereteDbErrorObject from errors::dbErrorsScript
+
+var errorType = error.errorType.identifier
+var errorDescription = error.description
+
+var message = genereteDbErrorObject(errorType, errorDescription)
+---
+write(message, 'application/json')]]></ee:set-variable>
+					<ee:set-variable variableName="exceptionDetails" ><![CDATA[%dw 2.0
+output application/java
+---
+{
+	errorType: error.errorType.identifier,
+	errorDescription: error.description
+}]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+		</on-error-continue>
 	</error-handler>
 </mule>
