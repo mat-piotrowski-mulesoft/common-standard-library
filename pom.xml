@@ -74,9 +74,9 @@
 	
 	<distributionManagement>
 	   <repository>
-	     <id>github</id>
+	     <id>github-public</id>
 	     <name>GitHub OWNER Apache Maven Packages</name>
-	     <url>https://maven.pkg.github.com/mat-piotrowski-mulesoft/maven-repository</url>
+	     <url>https://maven.pkg.github.com/mat-piotrowski-mulesoft/maven-repository-public</url>
 	   </repository>
 	</distributionManagement>
 
