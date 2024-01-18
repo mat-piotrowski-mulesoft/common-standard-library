@@ -6,12 +6,12 @@
   </pluginGroups>
   
   <activeProfiles>
-    <activeProfile>github</activeProfile>
+    <activeProfile>github-public</activeProfile>
   </activeProfiles>
 
   <servers>
 	<server>
-      <id>github</id>
+      <id>github-public</id>
       <username>mat-piotrowski</username>
       <password>${GITHUB_TOKEN}</password>
     </server>
@@ -20,7 +20,7 @@
   <profiles>
 	
 	<profile>
-      <id>github</id>
+      <id>github-public</id>
       <repositories>
         <repository>
           <id>central</id>
