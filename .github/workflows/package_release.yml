@@ -17,6 +17,6 @@ jobs:
           java-version: '8'
           distribution: 'zulu'
       - name: Publish package
-        run: mvn --batch-mode deploy
+        run: mvn --batch-mode deploy --settings .maven/settings.xml --file pom.xml
         env:
           GITHUB_TOKEN: ${{ secrets.MAVEN_REPO_GITHUB_TOKEN }}
